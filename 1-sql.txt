@@ -1,0 +1,56 @@
+1번 
+use bowlingleaguesample;
+SELECT teams.TeamName, Max(bowler_scores.RawScore) as HighScore, Min(bowler_scores.RawScore) as LowScore
+FROM bowlers
+INNER JOIN teams
+	ON bowlers.TeamID=teams.TeamID
+INNER JOIN bowler_scores
+	ON bowlers.BowlerID=bowler_scores.BowlerID
+Group by TeamName
+Order by TeamName ASC, HighScore ASC;
+
+2번
+use bowlingleaguesample;
+SELECT teams.TeamName, concat(bowlers.BowlerFirstName, " ", bowlers.BowlerLastName) as BowlerName, avg(bowler_scores.RawScore) as avgscore
+FROM bowlers
+INNER JOIN teams
+	ON bowlers.TeamID=teams.TeamID
+INNER JOIN bowler_scores
+	ON bowlers.BowlerID=bowler_scores.BowlerID
+Group by bowler_scores.BowlerID
+Having avg(bowler_scores.RawScore) <145
+Order by avgscore DESC;
+
+3번
+use bowlingleaguesample;
+SELECT tournaments.TourneyLocation, count(tourney_matches.MatchID) as `Number of matches`
+FROM tournaments
+JOIN tourney_matches
+	ON tournaments.TourneyID = tourney_matches.TourneyID
+Group by TourneyLocation
+Order by TourneyLocation ASC;
+
+4번
+use bowlingleaguesample;
+SELECT teams.TeamName, concat(lower(bowlers.BowlerFirstName), " ",lower(bowlers.BowlerLastName)) as BowlerName, bowlers.BowlerPhoneNumber
+FROM teams
+JOIN bowlers
+	ON teams.CaptainID = bowlers.BowlerID
+Order by TeamName ASC;
+
+5번
+use bowlingleaguesample;
+SELECT tournaments.TourneyDate, tourney_matches.Lanes,
+(SELECT TeamName FROM teams Where teams.TeamID=tourney_matches.OddLaneTeamID) as OddLaneTeamName,
+(SELECT TeamName FROM teams Where teams.TeamID=tourney_matches.EvenLaneTeamID) as EvenLaneTeamName
+FROM tourney_matches
+JOIN tournaments
+	ON tourney_matches.TourneyID = tournaments.TourneyID
+Order by TourneyDate ASC, Lanes ASC;
+
+6번
+use bowlingleaguesample;
+SELECT concat(bowlers.BowlerFirstName, " ",bowlers.BowlerLastName) as BowlerName, bowlers.BowlerCity, bowlers.BowlerAddress,
+left(bowlers.BowlerZip, 1) as zip_1, mid(bowlers.BowlerZip, 2, 2) as zip_2, right(bowlers.BowlerZip, 2) as zip_3
+FROM bowlers
+Order by BowlerName ASC;
